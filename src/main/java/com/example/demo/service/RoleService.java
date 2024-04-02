@@ -19,4 +19,8 @@ public class RoleService {
       return roleRepository.save(role);
    }
 
+   public Iterable<RoleEntity> findAll() {
+      return roleRepository.findAll();
+   }
+
 }
