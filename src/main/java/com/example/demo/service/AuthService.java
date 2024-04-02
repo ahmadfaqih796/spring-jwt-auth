@@ -17,7 +17,19 @@ public class AuthService {
 
    // Register User
    public UsersEntity register(UsersEntity users) {
+      // String encodedPassword = MD5PasswordEncoder.encode(users.getPassword());
+      // users.setPassword(encodedPassword);
       return usersRepository.save(users);
+   }
+
+   // Login User
+   // public List<UsersEntity> login(String name) {
+   // return usersRepository.findByUsername(name);
+   // }
+
+   public boolean login(String username, String password) {
+      // String encodedPassword = MD5PasswordEncoder.encode(password);
+      return usersRepository.findByUsernameAndPassword(username, password).isPresent();
    }
 
 }
