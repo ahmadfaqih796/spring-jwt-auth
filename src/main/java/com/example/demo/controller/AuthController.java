@@ -78,8 +78,7 @@ public class AuthController {
             userData.put("telephone", loggedInUser.getTelephone());
             userData.put("username", loggedInUser.getUsername());
             userData.put("agent_id", loggedInUser.getAgent_id());
-            userData.put("token", token); // Ini hanya contoh, Anda bisa menghasilkan
-                                          // token autentikasi di sini
+            userData.put("token", token);
             responseData.put("data", userData);
             return ResponseEntity.ok(responseData);
          } else {
