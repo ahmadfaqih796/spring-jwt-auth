@@ -1,5 +1,7 @@
 package com.example.demo.model.entity;
 
+import com.example.demo.util.MD5PasswordEncoder;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -64,7 +66,7 @@ public class UsersEntity {
    }
 
    public void setPassword(String password) {
-      this.password = password;
+      this.password = MD5PasswordEncoder.encode(password);
    }
 
    public String getFull_name() {
