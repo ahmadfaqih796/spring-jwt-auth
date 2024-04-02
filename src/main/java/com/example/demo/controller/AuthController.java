@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.entity.UsersEntity;
 import com.example.demo.model.repository.UsersRepository;
 import com.example.demo.service.AuthService;
+import com.example.demo.util.JwtUtil;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,6 +31,9 @@ public class AuthController {
 
    @Autowired
    private AuthService authService;
+
+   @Autowired
+   private JwtUtil jwtUtil;
 
    @PostMapping("/register")
    public UsersEntity register(@RequestBody UsersEntity users) {
@@ -59,8 +63,10 @@ public class AuthController {
          boolean loginSuccessful = authService.login(users.getUsername(), users.getPassword());
          if (loginSuccessful) {
 
+            String token = jwtUtil.generateToken(users.getUsername());
+
             UsersEntity loggedInUser = existingUsers.get(0);
-            logger.info("User found: {}", loggedInUser);
+            logger.info("User found: {}", token);
 
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("status", HttpStatus.OK.value());
@@ -72,8 +78,8 @@ public class AuthController {
             userData.put("telephone", loggedInUser.getTelephone());
             userData.put("username", loggedInUser.getUsername());
             userData.put("agent_id", loggedInUser.getAgent_id());
-            userData.put("token", "i9ue8u44ef8ejf8e9f8ejrfh8he8rhe89erf"); // Ini hanya contoh, Anda bisa menghasilkan
-                                                                           // token autentikasi di sini
+            userData.put("token", token); // Ini hanya contoh, Anda bisa menghasilkan
+                                          // token autentikasi di sini
             responseData.put("data", userData);
             return ResponseEntity.ok(responseData);
          } else {
