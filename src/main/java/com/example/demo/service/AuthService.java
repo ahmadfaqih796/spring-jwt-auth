@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +24,9 @@ public class AuthService {
       return usersRepository.save(users);
    }
 
-   // Login User
-   // public List<UsersEntity> login(String name) {
-   // return usersRepository.findByUsername(name);
-   // }
+   public List<UsersEntity> checkUser(UsersEntity users) {
+      return usersRepository.findByUsername(users.getUsername());
+   }
 
    public boolean login(String username, String password) {
       // String encodedPassword = MD5PasswordEncoder.encode(password);

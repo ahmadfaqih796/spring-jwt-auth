@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -51,28 +52,41 @@ public class AuthController {
 
    @PostMapping("/login")
    public ResponseEntity<Map<String, Object>> login(@RequestBody UsersEntity users) {
-      boolean loginSuccessful = authService.login(users.getUsername(), users.getPassword());
+      List<UsersEntity> existingUsers = authService.checkUser(users);
       logger.info("username: {}", users.getUsername());
-      // Ambil data pengguna dari database
-      // UsersEntity loggedInUser = authService.findByUsername(users.getUsername());
-      if (loginSuccessful) {
-         Map<String, Object> responseData = new HashMap<>();
-         responseData.put("status", HttpStatus.OK.value());
-         responseData.put("message", "berhasil login");
+      logger.info("password: {}", users.getPassword());
+      if (!existingUsers.isEmpty()) {
+         boolean loginSuccessful = authService.login(users.getUsername(), users.getPassword());
+         if (loginSuccessful) {
 
-         Map<String, String> userData = new HashMap<>();
-         userData.put("full_name", "faqih");
-         userData.put("token", "i9ue8u44ef8ejf8e9f8ejrfh8he8rhe89erf");
+            UsersEntity loggedInUser = existingUsers.get(0);
+            logger.info("User found: {}", loggedInUser);
 
-         responseData.put("data", userData);
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("status", HttpStatus.OK.value());
+            responseData.put("message", "berhasil login");
 
-         return ResponseEntity.ok(responseData);
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("full_name", loggedInUser.getFull_name());
+            userData.put("position", loggedInUser.getPosition());
+            userData.put("telephone", loggedInUser.getTelephone());
+            userData.put("username", loggedInUser.getUsername());
+            userData.put("agent_id", loggedInUser.getAgent_id());
+            userData.put("token", "i9ue8u44ef8ejf8e9f8ejrfh8he8rhe89erf"); // Ini hanya contoh, Anda bisa menghasilkan
+                                                                           // token autentikasi di sini
+            responseData.put("data", userData);
+            return ResponseEntity.ok(responseData);
+         } else {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
+            errorResponse.put("message", "Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+         }
       } else {
-         // Buat respons JSON untuk kesalahan
          Map<String, Object> errorResponse = new HashMap<>();
-         errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
-         errorResponse.put("message", "Invalid username or password");
-         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+         errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+         errorResponse.put("message", "User not found");
+         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
       }
    }
 }
