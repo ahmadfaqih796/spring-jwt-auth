@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.UsersEntity;
-import com.example.demo.model.repository.UsersRepository;
+import com.example.demo.model.repository.AuthRepository;
 
 import jakarta.transaction.TransactionScoped;
 
@@ -15,22 +15,22 @@ import jakarta.transaction.TransactionScoped;
 public class AuthService {
 
    @Autowired
-   private UsersRepository usersRepository;
+   private AuthRepository authRepository;
 
    // Register User
    public UsersEntity register(UsersEntity users) {
       // String encodedPassword = MD5PasswordEncoder.encode(users.getPassword());
       // users.setPassword(encodedPassword);
-      return usersRepository.save(users);
+      return authRepository.save(users);
    }
 
    public List<UsersEntity> checkUser(UsersEntity users) {
-      return usersRepository.findByUsername(users.getUsername());
+      return authRepository.findByUsername(users.getUsername());
    }
 
    public boolean login(String username, String password) {
       // String encodedPassword = MD5PasswordEncoder.encode(password);
-      return usersRepository.findByUsernameAndPassword(username, password).isPresent();
+      return authRepository.findByUsernameAndPassword(username, password).isPresent();
    }
 
 }
