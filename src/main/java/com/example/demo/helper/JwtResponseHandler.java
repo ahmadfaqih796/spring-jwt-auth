@@ -31,10 +31,10 @@ public class JwtResponseHandler {
          return ResponseEntity.ok(responseData);
       } catch (ExpiredJwtException e) {
          System.out.println("Invalid Token: " + e);
-         return buildUnauthorizedResponse("punten session kowe habis, login enggeh");
+         return buildUnauthorizedResponse("maaf session kamu habis, silahkan login");
       } catch (SignatureException e) {
          System.out.println("Invalid Token: " + e);
-         return buildUnauthorizedResponse("punten login awang");
+         return buildUnauthorizedResponse("silahkan login kembali");
       }
    }
 
