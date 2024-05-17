@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,8 +63,17 @@ public class RoleController {
    public ResponseEntity<Map<String, Object>> findAll(
          @RequestHeader("Authorization") String token,
          @RequestParam(defaultValue = "0") int page,
-         @RequestParam(defaultValue = "10") int size) {
-      Pageable pageable = PageRequest.of(page, size);
+         @RequestParam(defaultValue = "10") int size,
+         @RequestParam(value = "sortField", defaultValue = "id") String sortField,
+         @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+         @RequestParam(value = "keyword", defaultValue = "") String keyword) {
+      Sort sort = Sort.by(sortField);
+      if (sortDir.equals("asc")) {
+         sort = sort.ascending();
+      } else {
+         sort = sort.descending();
+      }
+      Pageable pageable = PageRequest.of(page, size, sort);
       Page<RoleEntity> roles = rolePageRepository.findAll(pageable);
       return jwtResponseHandler.handleToken(token, buildResponseData(roles));
    }
