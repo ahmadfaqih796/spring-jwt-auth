@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.example.demo.helper.JwtResponseHandler;
 import com.example.demo.model.entity.RoleEntity;
 import com.example.demo.model.repository.RolePageRepository;
 import com.example.demo.model.repository.RoleRepository;
+import com.example.demo.specification.RoleSpecification;
 
 @RestController
 @RequestMapping("/role")
@@ -74,7 +76,13 @@ public class RoleController {
          sort = sort.descending();
       }
       Pageable pageable = PageRequest.of(page, size, sort);
-      Page<RoleEntity> roles = rolePageRepository.findAll(pageable);
+      Page<RoleEntity> roles;
+      if (keyword.isEmpty()) {
+         roles = rolePageRepository.findAll(pageable);
+      } else {
+         Specification<RoleEntity> spec = RoleSpecification.containsKeyword(keyword);
+         roles = rolePageRepository.findAll(spec, pageable);
+      }
       return jwtResponseHandler.handleToken(token, buildResponseData(roles));
    }
 
