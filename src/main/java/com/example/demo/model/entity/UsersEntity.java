@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -31,6 +33,10 @@ public class UsersEntity {
 
    @Column(name = "telephone", length = 100)
    private Integer telephone;
+
+   @ManyToOne
+   @JoinColumn(name = "address_id")
+   private AddressEntity addressEntity;
 
    public UsersEntity() {
    }
@@ -91,6 +97,14 @@ public class UsersEntity {
 
    public void setTelephone(Integer telephone) {
       this.telephone = telephone;
+   }
+
+   public AddressEntity getAddressEntity() {
+      return addressEntity;
+   }
+
+   public void setAddressEntity(AddressEntity addressEntity) {
+      this.addressEntity = addressEntity;
    }
 
 }
