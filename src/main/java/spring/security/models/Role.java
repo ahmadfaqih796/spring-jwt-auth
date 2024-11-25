@@ -2,13 +2,10 @@ package spring.security.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import spring.security.enums.ERole;
 
 @Entity
 @Table(name = "roles")
@@ -16,11 +13,11 @@ public class Role {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
   private Integer id;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "name", length = 20)
-  private ERole name;
+  @Column(name = "role_name", unique = true, nullable = false, length = 70)
+  private String roleName;
 
   public Role() {}
 
@@ -32,13 +29,11 @@ public class Role {
     this.id = id;
   }
 
-  public ERole getName() {
-    return name;
+  public String getRoleName() {
+    return roleName;
   }
 
-  public void setName(ERole name) {
-    this.name = name;
+  public void setRoleName(String roleName) {
+    this.roleName = roleName;
   }
-  // Getters dan Setters
-
 }
