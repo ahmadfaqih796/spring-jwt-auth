@@ -9,7 +9,10 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.util.encoders.Hex;
+import org.springframework.stereotype.Component;
 
+// wajib tambahin annotasi @Component apabila tanpa konfigurasi di AppConfig dengan anotasi @Bean
+@Component
 public class Crypto {
 
   private static final String KEY_GENERATE =
@@ -17,7 +20,6 @@ public class Crypto {
 
   private static final Integer BLOCK_SIZE = 16;
 
-  // Enkripsi
   public String encrypt(String plaintext) throws Exception {
     byte[] key = Hex.decode(KEY_GENERATE);
     byte[] iv = generateIV();
@@ -44,7 +46,6 @@ public class Crypto {
     return Hex.toHexString(result);
   }
 
-  // Dekripsi
   public String decrypt(String ciphertextHex) throws Exception {
     byte[] key = Hex.decode(KEY_GENERATE);
     byte[] ciphertextWithIV = Hex.decode(ciphertextHex);
