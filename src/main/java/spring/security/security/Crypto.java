@@ -94,20 +94,19 @@ public class Crypto {
     new SecureRandom().nextBytes(iv);
     return iv;
   }
+  // public static void main(String[] args) {
+  //   try {
+  //     String plaintext = "ahmad faqih arifin";
 
-  public static void main(String[] args) {
-    try {
-      String plaintext = "ahmad faqih arifin";
+  //     System.out.println("Plaintext: " + plaintext);
+  //     Crypto crypto = new Crypto();
+  //     String encrypted = crypto.encrypt(plaintext);
+  //     System.out.println("Encrypted: " + encrypted);
 
-      System.out.println("Plaintext: " + plaintext);
-      Crypto crypto = new Crypto();
-      String encrypted = crypto.encrypt(plaintext);
-      System.out.println("Encrypted: " + encrypted);
-
-      String decrypted = crypto.decrypt(encrypted);
-      System.out.println("Decrypted: " + decrypted);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+  //     String decrypted = crypto.decrypt(encrypted);
+  //     System.out.println("Decrypted: " + decrypted);
+  //   } catch (Exception e) {
+  //     e.printStackTrace();
+  //   }
+  // }
 }
