@@ -72,7 +72,7 @@ public class AuthService {
       if (!password.equals(loginRequest.getPassword())) {
         return ResponseEntity.badRequest().body("Invalid password");
       }
-      return ResponseEntity.ok().body(password);
+      return ResponseEntity.ok().body(user);
     } catch (Exception e) {
       return ResponseEntity
         .status(500)
