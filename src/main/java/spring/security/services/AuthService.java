@@ -1,5 +1,7 @@
 package spring.security.services;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import spring.security.dto.request.RegisterRequest;
 import spring.security.models.User;
 import spring.security.repository.UserRepository;
 import spring.security.security.Crypto;
+import spring.security.security.jwt.JwtUtils;
 import spring.security.utils.FindModel;
 
 @Service
@@ -16,6 +19,7 @@ public class AuthService {
   private final UserRepository userRepository;
   private final FindModel findModel;
   private final Crypto crypto;
+  private final JwtUtils jwtUtils;
 
   // Field Injection
   // tidak disarankan untuk di gunakan
@@ -32,11 +36,13 @@ public class AuthService {
   public AuthService(
     UserRepository userRepository,
     FindModel findModel,
-    Crypto crypto
+    Crypto crypto,
+    JwtUtils jwtUtils
   ) {
     this.userRepository = userRepository;
     this.findModel = findModel;
     this.crypto = crypto;
+    this.jwtUtils = jwtUtils;
   }
 
   public ResponseEntity<Object> register(RegisterRequest registerRequest) {
@@ -72,7 +78,14 @@ public class AuthService {
       if (!password.equals(loginRequest.getPassword())) {
         return ResponseEntity.badRequest().body("Invalid password");
       }
-      return ResponseEntity.ok().body(user);
+      String token = jwtUtils.createToken(user.getUsername());
+      Map<String, Object> response = new HashMap<>();
+      response.put("token", token);
+      response.put("username", user.getUsername());
+      response.put("email", user.getEmail());
+      response.put("role", user.getRole().getRoleName());
+      response.put("deskrip_token", jwtUtils.parseToken(token));
+      return ResponseEntity.ok().body(response);
     } catch (Exception e) {
       return ResponseEntity
         .status(500)
